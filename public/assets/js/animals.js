@@ -4,7 +4,7 @@ const $displayArea = document.querySelector('#display-area');
 getAnimals();
 
 $animalForm.addEventListener('submit', handleGetAnimalsSubmit);
-
+// Based on query parameters a list of animals is retrieved from the server.
 function getAnimals(formData = {}) {
 	let queryUrl = '/api/animals?';
 
@@ -21,7 +21,7 @@ function getAnimals(formData = {}) {
 		printResults(animalData);
 	});
 }
-
+// All animals retrieved above are formatted and displayed. 
 function printResults(resultArr) {
 	const animalHTML = resultArr.map(function ({ id, name, personalityTraits, species, diet }) {
 			return `
@@ -40,7 +40,7 @@ function printResults(resultArr) {
 
 	$displayArea.innerHTML = animalHTML.join('');
 }
-
+// When the animal form is submitted call the getAnimals method using an new animal object to define query parameters.
 function handleGetAnimalsSubmit(event) {
 	event.preventDefault();
 	const dietRadioHTML = $animalForm.querySelectorAll('[name="diet"]');

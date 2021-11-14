@@ -1,3 +1,4 @@
+// Animal API Endpoints.
 const { animals } = require("../../data/animals.json");
 const { filterByQuery, findById, createNewAnimal, validateAnimal } = require('../../lib/animals.js');
 const router = require('express').Router();

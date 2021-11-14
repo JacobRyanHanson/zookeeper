@@ -4,7 +4,7 @@ const $zookeeperForm = document.querySelector("#zookeeper-form");
 $zookeeperForm.addEventListener('submit', handleGetZookeepersSubmit);
 
 getZookeepers();
-
+// Based on query parameters a list of zookeepers is retrieved from the server.
 function getZookeepers(formData = {}) {
 	let queryUrl = '/api/zookeepers?';
 
@@ -21,7 +21,7 @@ function getZookeepers(formData = {}) {
 		printResults(zookeeperArr);
 	});
 }
-
+// All zookeepers retrieved above are formatted and displayed. 
 function printResults(resultArr) {
 	const animalHTML = resultArr.map(function ({ id, name, age, favoriteAnimal }) {
 		return `
@@ -39,7 +39,7 @@ function printResults(resultArr) {
 
 	$displayArea.innerHTML = animalHTML.join('');
 }
-
+// When the zookeeper form is submitted call the getAnimals method using an new animal object to define query parameters.
 function handleGetZookeepersSubmit(event) {
 	event.preventDefault();
 	const nameHTML = $zookeeperForm.querySelector('[name="name"]');

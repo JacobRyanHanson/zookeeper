@@ -7,7 +7,7 @@ $zookeeperForm.addEventListener('submit', handleZookeeperFormSubmit);
 function handleAnimalFormSubmit(event) {
 	event.preventDefault();
 
-	// get animal data and organize it
+	// Gets animal data and organizes it.
 	const name = $animalForm.querySelector('[name="animal-name"]').value;
 	const species = $animalForm.querySelector('[name="species"]').value;
 	const dietRadioHTML = $animalForm.querySelectorAll('[name="diet"]');
@@ -29,7 +29,7 @@ function handleAnimalFormSubmit(event) {
 		personalityTraits.push(selectedTraits[i].value);
 	}
 	const animalObject = { name, species, diet, personalityTraits };
-
+	// Updates server by adding an animal.
 	fetch('/api/animals', {
 		method: 'POST',
 		headers: {
@@ -50,13 +50,13 @@ function handleAnimalFormSubmit(event) {
 function handleZookeeperFormSubmit(event) {
 	event.preventDefault();
 
-	// get zookeeper data and organize it
+	// Gets zookeeper data and organizes it.
 	const name = $zookeeperForm.querySelector('[name="zookeeper-name"]').value;
 	const age = parseInt($zookeeperForm.querySelector('[name="age"]').value);
 	const favoriteAnimal = $zookeeperForm.querySelector('[name="favorite-animal"]').value;
 
 	const zookeeperObj = { name, age, favoriteAnimal };
-	
+	// Updates server by adding a zookeeper.
 	fetch('api/zookeepers', {
 		method: 'POST',
 		headers: {
