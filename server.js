@@ -7,10 +7,20 @@ const app = express();
 // Middleware functions mounted to the server that requests must pass through before reaching an endpoint.
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.static('./public'));
 
 const PORT = process.env.PORT || 3001
-app.listen(PORT, function () {
-    console.log('API server now on port ' + PORT);
+// Homepage.
+app.get('/', function (request, response) {
+    response.sendFile(path.join(__dirname, './public/index.html'));
+});
+
+app.get('/animals', function (request, response) {
+    response.sendFile(path.join(__dirname, './public/animals.html'));
+});
+
+app.get('/zookeepers', function (request, response) {
+    response.sendFile(path.join(__dirname, './public/zookeepers.html'));
 });
 // Query object useful for multifaceted operations.
 app.get('/api/animals', function (request, response) {
@@ -28,6 +38,10 @@ app.get('/api/animals/:id', function (request, response) {
     } else {
         response.send(404);
     }  
+});
+// Wildcard Route redirects user to homepage if none of the above routes were selected.
+app.get('*', function (request, response) {
+    response.sendFile(path.join(__dirname, './public/index.html'));
 });
 
 app.post('/api/animals', function (request, response) {
@@ -106,3 +120,7 @@ function validateAnimal(animal) {
     }
     return true;
 }
+
+app.listen(PORT, function () {
+    console.log('API server now on port ' + PORT);
+});
