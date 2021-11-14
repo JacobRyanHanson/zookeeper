@@ -1,18 +1,43 @@
 const express = require("express");
-const { animals } = require("./data/animals.json")
+const { animals } = require("./data/animals.json");
+const fs = require('fs');
+const path = require('path');
 // Server setup.
 const app = express();
+// Middleware functions mounted to the server that requests must pass through before reaching an endpoint.
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 const PORT = process.env.PORT || 3001
 app.listen(PORT, function () {
     console.log('API server now on port ' + PORT);
 });
-
+// Query object useful for multifaceted operations.
 app.get('/api/animals', function (request, response) {
     let results = animals;
     if (request.query) {
         results = filterByQuery(request.query, results);
     }
     response.json(results);
+});
+// Params object useful for retrieving individual records.
+app.get('/api/animals/:id', function (request, response) {
+    const result = findById(request.params.id, animals);
+    if (result) {
+        response.json(result);
+    } else {
+        response.send(404);
+    }  
+});
+
+app.post('/api/animals', function (request, response) {
+    request.body.id = animals.length.toString();
+    if (!validateAnimal(request.body)) {
+        response.status(400).send('The animal is not properly formatted.');
+    } else {
+        const animal = createNewAnimal(request.body, animals);
+        response.json(animal);
+    }
 });
 
 function filterByQuery(query, animalsArray) {
@@ -28,8 +53,7 @@ function filterByQuery(query, animalsArray) {
         personalityTraitsArray.forEach(function (trait) {
             filteredResults = filteredResults.filter(function (animal) {
                 return animal.personalityTraits.indexOf(trait) !== -1;
-            }
-            );
+            });
         });
     }
     if (query.diet) {
@@ -48,4 +72,37 @@ function filterByQuery(query, animalsArray) {
         });
     }
     return filteredResults;
+}
+
+function findById(id, animalsArray) {
+    const result = animalsArray.filter(function (animal) {
+        return animal.id === id;
+    })[0];
+    return result;
+}
+
+function createNewAnimal(body, animalsArray) {
+    const animal = body;
+    animalsArray.push(animal);
+    fs.writeFileSync(
+        path.join(__dirname, './data/animals.json'),
+        JSON.stringify({ animals: animalsArray }, null, 2)
+    );
+    return animal;
+}
+
+function validateAnimal(animal) {
+    if (!animal.name || typeof animal.name !== 'string') {
+      return false;
+    }
+    if (!animal.species || typeof animal.species !== 'string') {
+      return false;
+    }
+    if (!animal.diet || typeof animal.diet !== 'string') {
+      return false;
+    }
+    if (!animal.personalityTraits || !Array.isArray(animal.personalityTraits)) {
+      return false;
+    }
+    return true;
 }
