@@ -11,6 +11,9 @@
     "type": "git",
     "url": "git+https://github.com/JacobRyanHanson/zookeeper.git"
   },
+  "engines": {
+    "node": "16.20.0"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
